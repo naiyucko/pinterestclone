@@ -147,6 +147,11 @@ img {
 	color: #212121;
 }
 
+.btn-remove {
+	background-color: #DF0101;
+	color: #212121;
+}
+
 #click-nbr {
 	font-weight: 400;
 }

@@ -156,6 +156,15 @@ function clickHandler (db) {
          }
       });
 	}
+	
+	this.deletePoll = function (req, res, next) {
+		polls.remove({'user': req.params.name, 'title' : req.params.ptitle}, function (err, result) {
+			if (err) {
+            throw err;
+         }
+         res.redirect('/');
+		});
+	}
 }
 
 module.exports = clickHandler;

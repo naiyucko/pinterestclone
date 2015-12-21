@@ -62,5 +62,8 @@ module.exports = function (app, db) {
             res.sendFile(process.cwd() + '/public/view.html');
         })
         .post(clickHandler.viewPoll);
+        
+    app.route('/poll/:name/:ptitle/delete')
+    	.get (clickHandler.deletePoll);
     	
 };
