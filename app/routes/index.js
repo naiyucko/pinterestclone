@@ -1,57 +1,66 @@
 'use strict';
 
-var path = process.cwd();
-var ClickHandler = require(path + '/app/controllers/clickHandler.server.js');
+var ClickHandler = require(process.cwd() + '/app/controllers/clickHandler.server.js');
 
-module.exports = function (app, passport) {
+module.exports = function (app, db) {
+	var bodyParser = require('body-parser');
+	app.use( bodyParser.json() );       // to support JSON-encoded bodies
+	app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  		extended: true
+	})); 
+    var clickHandler = new ClickHandler(db);
 
-	function isLoggedIn (req, res, next) {
-		if (req.isAuthenticated()) {
-			return next();
-		} else {
-			res.redirect('/login');
-		}
-	}
+    app.route('/')
+        .get(clickHandler.isLogged, function (req, res) {
+            res.sendFile(process.cwd() + '/public/index.html');
+        });
 
-	var clickHandler = new ClickHandler();
-
-	app.route('/')
-		.get(isLoggedIn, function (req, res) {
-			res.sendFile(path + '/public/index.html');
-		});
-
-	app.route('/login')
-		.get(function (req, res) {
-			res.sendFile(path + '/public/login.html');
-		});
-
-	app.route('/logout')
-		.get(function (req, res) {
-			req.logout();
-			res.redirect('/login');
-		});
-
-	app.route('/profile')
-		.get(isLoggedIn, function (req, res) {
-			res.sendFile(path + '/public/profile.html');
-		});
-
-	app.route('/api/:id')
-		.get(isLoggedIn, function (req, res) {
-			res.json(req.user.github);
-		});
-
-	app.route('/auth/github')
-		.get(passport.authenticate('github'));
-
-	app.route('/auth/github/callback')
-		.get(passport.authenticate('github', {
-			successRedirect: '/',
-			failureRedirect: '/login'
-		}));
-
-	app.route('/api/:id/clicks')
-		.get(isLoggedIn, clickHandler.getClicks)
-		.post(isLoggedIn, clickHandler.addClick)
-		.delete(isLoggedIn, clickHandler.resetClicks);
+    app.route('/api/clicks')
+        .get(clickHandler.getClicks)
+        //.post(clickHandler.addClick)
+        .delete(clickHandler.resetClicks);
+        
+    app.route('/login')
+    	.get(function (req, res) {
+            res.sendFile(process.cwd() + '/public/login.html');
+        })
+        .post(clickHandler.loginCheck);
+        
+    app.route('/signup')
+    	.get(function (req, res) {
+            res.sendFile(process.cwd() + '/public/signup.html');
+        })
+        .post(clickHandler.addUser, function (req, res) {
+            res.redirect('/login/');
+        });
+        
+    app.route('/logout')
+        .get(function (req, res) {
+        	res.clearCookie('username');
+        	res.redirect('/login/');
+        });
+        
+    app.route('/newpoll')
+    	.post(clickHandler.createPoll, function (req, res) {
+        	//res.redirect('/poll/');
+        });
+    	
+    app.route('/poll/:name/:ptitle')
+    	.get(function (req, res) {
+            res.sendFile(process.cwd() + '/public/poll.html');
+        })
+    	.post(clickHandler.displayPoll);
+        
+    app.route('/api/polls')
+        .get(clickHandler.getPolls);
+        
+    app.route('/poll/:name/:ptitle/postpoll')
+    	.post(clickHandler.pollVote);
+    	
+  	app.route('/poll/:name/:ptitle/view')
+  		.get(clickHandler.isLogged, function (req, res) {
+            res.sendFile(process.cwd() + '/public/view.html');
+        })
+        .post(clickHandler.viewPoll);
+    	
 };
