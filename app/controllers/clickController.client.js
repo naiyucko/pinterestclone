@@ -40,7 +40,7 @@
    }
    
    function updateNewPoll () {
-      pollsection.innerHTML = '<form id="myForm" method="post" action="newpoll"><p>Poll Title: <input type="text" name="title" id="title" /></p><br /><div id="input1" style="margin-bottom:4px;" class="clonedInput">Option: <input type="text" name="name1" id="name1" /></div><div><input type="button" id="btnAdd" value="Add Another" /></div><p class="submit"><input type="submit" name="commit" value="Save"></p></form>';
+      pollsection.innerHTML = '<form id="myForm" method="post" action="newpoll"><p>Poll Title: <input type="text" name="title" id="title" onkeyup=topLel(this.value) /><span id="wowthere"></span></p><br /><div id="input1" style="margin-bottom:4px;" class="clonedInput">Option: <input type="text" name="name1" id="name1" /></div><div><input type="button" id="btnAdd" value="Add Another" /></div><p class="submit"><input type="submit" name="commit" value="Save" id="savebtn"></p></form>';
       $('#btnAdd').click(function() {
           var num        = $('.clonedInput').length;    // how many "duplicatable" input fields we currently have
           var newNum    = new Number(num + 1);        // the numeric ID of the new input field being added
@@ -80,3 +80,15 @@
    
    ready(ajaxRequest('GET', apiUrl, updateClickCount));
 })();
+
+function topLel(textf) {
+   console.log(textf);
+   if (textf.indexOf("'") !== -1) {
+      $('#savebtn').attr('disabled','disabled');
+      $('#wowthere').html("No special characters allowed");
+   }
+   else {
+      $('#savebtn').attr('disabled',false);
+      $('#wowthere').html("");
+   }
+}
