@@ -46,9 +46,11 @@ function clickHandler (db) {
 
    this.pollVote = function (req, res) {
    	var answer = req.body.poll.toString();
+   	var rname = decodeURI(req.params.name).toString();
+	var rtitle = decodeURI(req.params.ptitle).toString();
    	var query = {};
    	query[answer] = parseInt(1);
-      polls.findAndModify({'user': req.params.name, 'title' : req.params.ptitle}, {}, { $inc:  query }, function (err, result) {
+      polls.findAndModify({'user': rname, 'title' : rtitle}, {}, { $inc:  query }, function (err, result) {
          if (err) {
             throw err;
          }
@@ -129,11 +131,13 @@ function clickHandler (db) {
 	
 	this.displayPoll = function (req, res, next) {
 		var clickProjection = { '_id': false };
-		polls.findOne({'user': req.params.name, 'title' : req.params.ptitle}, clickProjection, function (err, result) {
+		var rname = decodeURI(req.params.name).toString();
+		var rtitle = decodeURI(req.params.ptitle).toString();
+		polls.findOne({'user': rname, 'title' : rtitle}, clickProjection, function (err, result) {
          if (err) {
             throw err;
          }
-
+			console.log(result);
          if (result) {
             res.json(result);
          } else {
@@ -144,7 +148,9 @@ function clickHandler (db) {
 	
 	this.viewPoll = function (req, res, next) {
 		var clickProjection = { '_id': false };
-		polls.findOne({'user': req.params.name, 'title' : req.params.ptitle}, clickProjection, function (err, result) {
+		var rname = decodeURI(req.params.name).toString();
+		var rtitle = decodeURI(req.params.ptitle).toString();
+		polls.findOne({'user': rname, 'title' : rtitle}, clickProjection, function (err, result) {
          if (err) {
             throw err;
          }
@@ -158,7 +164,9 @@ function clickHandler (db) {
 	}
 	
 	this.deletePoll = function (req, res, next) {
-		polls.remove({'user': req.params.name, 'title' : req.params.ptitle}, function (err, result) {
+		var rname = decodeURI(req.params.name).toString();
+		var rtitle = decodeURI(req.params.ptitle).toString();
+		polls.remove({'user': rname, 'title' : rtitle}, function (err, result) {
 			if (err) {
             throw err;
          }
