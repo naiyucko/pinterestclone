@@ -48,6 +48,9 @@ function clickHandler (db) {
    	var answer = req.body.poll.toString();
    	var rname = decodeURI(req.params.name).toString();
 	var rtitle = decodeURI(req.params.ptitle).toString();
+	if (req.params.ptitle.endsWith('?') && !rtitle.endsWith('?')) {
+			rtitle += "?";
+		}
    	var query = {};
    	query[answer] = parseInt(1);
       polls.findAndModify({'user': rname, 'title' : rtitle}, {}, { $inc:  query }, function (err, result) {
@@ -78,7 +81,12 @@ function clickHandler (db) {
 	};
 	
 	this.createPoll = function (req, res, next) {
-		var tempob = {'user' : req.cookies.username, 'title' : req.body.title};
+		var rtitle = decodeURI(req.body.title).toString();
+		if (rtitle.endsWith('?')) {
+			rtitle = rtitle.substring(0, rtitle.length - 1);
+			console.log(rtitle);
+		}
+		var tempob = {'user' : req.cookies.username, 'title' : rtitle};
 		for (var v = 1; v < Object.keys(req.body).length - 1; v++)
 		{
 			
@@ -90,7 +98,7 @@ function clickHandler (db) {
                if (err) {
                   throw err;
                }
-               var urlgo = "/poll/" + req.cookies.username.toString() + "/" + req.body.title.toString();
+               var urlgo = "/poll/" + req.cookies.username.toString() + "/" + rtitle;
                res.redirect(urlgo);
             });
 	}
@@ -110,7 +118,6 @@ function clickHandler (db) {
 	               		res.redirect('/');
 	               }
 	               else {
-	               	console.log(result);
 	               		res.redirect('/login');
 	               }
                })
@@ -133,15 +140,16 @@ function clickHandler (db) {
 		var clickProjection = { '_id': false };
 		var rname = decodeURI(req.params.name).toString();
 		var rtitle = decodeURI(req.params.ptitle).toString();
+		if (req.params.ptitle.endsWith('?') && !rtitle.endsWith('?')) {
+			rtitle += "?";
+		}
 		polls.findOne({'user': rname, 'title' : rtitle}, clickProjection, function (err, result) {
          if (err) {
             throw err;
          }
-			console.log(result);
          if (result) {
             res.json(result);
          } else {
-            
          }
       });
 	}
@@ -150,6 +158,9 @@ function clickHandler (db) {
 		var clickProjection = { '_id': false };
 		var rname = decodeURI(req.params.name).toString();
 		var rtitle = decodeURI(req.params.ptitle).toString();
+		if (req.params.ptitle.endsWith('?') && !rtitle.endsWith('?')) {
+			rtitle += "?";
+		}
 		polls.findOne({'user': rname, 'title' : rtitle}, clickProjection, function (err, result) {
          if (err) {
             throw err;
@@ -158,7 +169,6 @@ function clickHandler (db) {
          if (result) {
             res.json(result);
          } else {
-            
          }
       });
 	}
@@ -166,6 +176,9 @@ function clickHandler (db) {
 	this.deletePoll = function (req, res, next) {
 		var rname = decodeURI(req.params.name).toString();
 		var rtitle = decodeURI(req.params.ptitle).toString();
+		if (req.params.ptitle.endsWith('?') && !rtitle.endsWith('?')) {
+			rtitle += "?";
+		}
 		polls.remove({'user': rname, 'title' : rtitle}, function (err, result) {
 			if (err) {
             throw err;

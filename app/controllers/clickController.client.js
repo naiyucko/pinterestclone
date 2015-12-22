@@ -65,6 +65,10 @@
       ajaxRequest('GET', apiUrlPolls, function (data) {
          var html = "";
          var jdata = JSON.parse(data);
+         if (jdata.length === 0)
+         {
+            html += "You haven't created any polls yet!";
+         }
          for (var v = 0; v < jdata.length; v++)
          {
             html += '<br /><br /><a class = "menu" href="/poll/' + jdata[v].user + '/' + jdata[v].title + '/view"><b>' + jdata[v].title + '</b></a>' + '<div class="remove-btn"><a href="/poll/' + jdata[v].user + '/' + jdata[v].title + '/delete"><button class="btn btn-remove">Delete</button></div>';
