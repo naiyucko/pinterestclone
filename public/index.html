@@ -3,8 +3,8 @@
 <html>
 
 	<head>
-		<title>Voting App</title>
-		
+		<title>Pinterest App</title>
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 		<link href="/public/css/main.css" rel="stylesheet" type="text/css">
 	</head>
 
@@ -15,24 +15,25 @@
 
 	<body>
 		<div class="container">
-			<img src="/public/img/voting_icon.png" height="150" width="150"/>
 			<br />
-			<p class="clementine-text">Voting App</p>
+			<p class="clementine-text">Pinterest App</p>
 		</div>
 	
 		<div class="container">
-			<p>What would you like to do today?<span id="click-nbr"></span></p>
+			<p>The URL for your personal wall: <span id="click-nbr"></span></p>
 			<br />
 			<div class="btn-container">
-				<button type="submit" class="btn btn-add">New Poll</button>
-				<button class="btn btn-delete">My Polls</button>
+				<button type="submit" class="btn btn-add">Add Image</button>
+				<button class="btn btn-delete disabled">My Images</button>
 			</div>
 		</div>
 		<center><br /><div class="container text-center" id="newpoll">
-			
+			 
 		</div></center>
 		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 		<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.2.0/imagesloaded.pkgd.js"></script>
+		<script src="https://npmcdn.com/masonry-layout@4.0/dist/masonry.pkgd.js"></script>
 		<script type="text/javascript" src="controllers/clickController.client.js"></script>
 	</body>
 

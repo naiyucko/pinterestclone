@@ -6,9 +6,10 @@
    var clickNbr = document.querySelector('#click-nbr');
    var namesection = document.querySelector('#display-name');
    var pollsection = document.querySelector('#newpoll');
-   var apiUrl = 'https://votingapp-naiyucko.c9users.io/api/clicks';
-   var apiUrlPolls = 'https://votingapp-naiyucko.c9users.io/api/polls';
+   var apiUrl = 'https://pinterest-naiyucko.c9users.io/api/clicks';
+   var apiUrlPolls = 'https://pinterest-naiyucko.c9users.io/api/polls';
    
+         
    function ready (fn) {
       if (typeof fn !== 'function') {
          return;
@@ -37,28 +38,16 @@
     function updateClickCount (data) {
       var clicksObject = JSON.parse(data);
       namesection.innerHTML = clicksObject.username;
+      clickNbr.innerHTML = 'https://pinterest-naiyucko.c9users.io/view/' + clicksObject.username;
    }
    
    function updateNewPoll () {
-      pollsection.innerHTML = '<form id="myForm" method="post" action="newpoll"><p>Poll Title: <input type="text" name="title" id="title" onkeyup=topLel(this.value) /><span id="wowthere"></span></p><br /><div id="input1" style="margin-bottom:4px;" class="clonedInput">Option: <input type="text" name="name1" id="name1" /></div><div><input type="button" id="btnAdd" value="Add Another" /></div><p class="submit"><input type="submit" name="commit" value="Save" id="savebtn"></p></form>';
-      $('#btnAdd').click(function() {
-          var num        = $('.clonedInput').length;    // how many "duplicatable" input fields we currently have
-          var newNum    = new Number(num + 1);        // the numeric ID of the new input field being added
+      pollsection.innerHTML = '<form id="myForm" method="post" action="newpoll"><p>Image Link: <input type="text" name="title" id="title" onkeyup=topLel(this.value) /></p><br /><div></div><p class="submit"><input type="submit" name="commit" value="Save" id="savebtn"></p></form>';
       
-          // create the new element via clone(), and manipulate it's ID using newNum value
-          var newElem = $('#input' + num).clone().attr('id', 'input' + newNum);
-      
-          // manipulate the name/id values of the input inside the new element
-          newElem.children(':first').attr('id', 'name' + newNum).attr('name', 'name' + newNum);
-      
-          // insert the new element after the last "duplicatable" input field
-          $('#input' + num).after(newElem);
-      });
    }
    
    addButton.addEventListener('click', function () {
       updateNewPoll();
-
    }, false);
    
    deleteButton.addEventListener('click', function () {
@@ -67,18 +56,30 @@
          var jdata = JSON.parse(data);
          if (jdata.length === 0)
          {
-            html += "You haven't created any polls yet!";
+            html += "You haven't added any images yet!";
          }
          for (var v = 0; v < jdata.length; v++)
          {
-            html += '<br /><br /><a class = "menu" href="/poll/' + jdata[v].user + '/' + jdata[v].title + '/view"><b>' + jdata[v].title + '</b></a>' + '<div class="remove-btn"><a href="/poll/' + jdata[v].user + '/' + jdata[v].title + '/delete"><button class="btn btn-remove">Delete</button></div>';
+            html += '<div class="masonryImage"><img onError="this.onerror=null;this.src=\'http://www.positive-magazine.com/edge/wp-content/themes/15zine/library/images/placeholders/placeholder-360x240.png\';" class="masonryImg" src="' + jdata[v].title + '" />' + '<form action="/delete" method="post"><button class="btn btn-remove" name="foo" value="' + jdata[v].title + '">Delete</button></form>' + '</div>';
          }
          pollsection.innerHTML = html;
+         var ayylmao = $('#newpoll').masonry({
+           itemSelector: '.masonryImage',
+           gutter: 1,
+           columnWidth: 20
+         });
+         ayylmao.imagesLoaded().progress( function() {
+           ayylmao.masonry('layout');
+         });
+         $('.btn-delete').hide();
       });
 
    }, false);
    
    ready(ajaxRequest('GET', apiUrl, updateClickCount));
+   
+   
+   
 })();
 
 function topLel(textf) {

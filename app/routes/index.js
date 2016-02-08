@@ -45,7 +45,7 @@ module.exports = function (app, db) {
         	//res.redirect('/poll/');
         });
     	
-    app.route('/poll/:name/:ptitle')
+    app.route('/view/:name')
     	.get(function (req, res) {
             res.sendFile(process.cwd() + '/public/poll.html');
         })
@@ -63,7 +63,7 @@ module.exports = function (app, db) {
         })
         .post(clickHandler.viewPoll);
         
-    app.route('/poll/:name/:ptitle/delete')
-    	.get (clickHandler.deletePoll);
+    app.route('/delete')
+    	.post (clickHandler.deletePoll);
     	
 };

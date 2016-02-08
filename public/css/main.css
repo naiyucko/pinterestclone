@@ -37,8 +37,12 @@ p {
 .container p {
 	text-align: center;
 	padding: 0;
+	width: 100%;
 }
 
+.masonryImage {
+	margin-bottom: 10px;
+}
 /****** Header Styling ******/
 
 header p {
@@ -95,6 +99,10 @@ header a ~ p {
 .btn > img {
 	float: left;
 	margin-left: 10px
+}
+
+.masonryImg {
+	max-height: 400px;
 }
 
 /****** Logo Div Styling ******/

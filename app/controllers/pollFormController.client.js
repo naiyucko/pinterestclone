@@ -2,7 +2,7 @@
 
 (function () {
    var chartarea = document.querySelector('.charting');
-   var apiUrlPolls = 'https://votingapp-naiyucko.c9users.io/api/polls';
+   var apiUrlPolls = 'https://pinterest-naiyucko.c9users.io/api/polls';
    
    function ready (fn) {
       if (typeof fn !== 'function') {
@@ -30,23 +30,25 @@
    }
    
     function updateClickCount (data) {
-        var goddamn = JSON.parse(data);
-        var keystuff = Object.keys(goddamn);
-        var html = "<h1>" + goddamn.title + "</h1>";
-        if (window.location.href.endsWith('/'))
-        {
-           html += '<form method="post" action="postpoll">';
-        }
-        else
-        {
-           html += '<form method="post" action="' + window.location.href + '/postpoll">';
-        }
-        for (var v = 2; v < keystuff.length; v++)
-        {
-            html += '<input type="radio" name="poll"' + '" value="' + keystuff[v] + '">' + keystuff[v] + '<br /><br />';
-        }
-        html += '<input type="submit" name="commit" value="Vote"></form>';
-      chartarea.innerHTML = html;
+        var jdata = JSON.parse(data);
+        var html = '';
+        if (jdata.length === 0)
+         {
+            html += "This user hasn't added any images yet!";
+         }
+         for (var v = 0; v < jdata.length; v++)
+         {
+            html += '<div class="masonryImage"><img onError="this.onerror=null;this.src=\'http://www.positive-magazine.com/edge/wp-content/themes/15zine/library/images/placeholders/placeholder-360x240.png\';" class="masonryImg" src="' + jdata[v].title + '" />' + '</div>';
+         }
+         chartarea.innerHTML = html;
+         var ayylmao = $('.charting').masonry({
+           itemSelector: '.masonryImage',
+           gutter: 1,
+           columnWidth: 20
+         });
+         ayylmao.imagesLoaded().progress( function() {
+           ayylmao.masonry('layout');
+         });
    }
    
    ready(ajaxRequest('POST', window.location.href, updateClickCount));

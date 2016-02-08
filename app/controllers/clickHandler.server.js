@@ -81,24 +81,13 @@ function clickHandler (db) {
 	};
 	
 	this.createPoll = function (req, res, next) {
-		var rtitle = decodeURI(req.body.title).toString();
-		if (rtitle.endsWith('?')) {
-			rtitle = rtitle.substring(0, rtitle.length - 1);
-			console.log(rtitle);
-		}
+		var rtitle = req.body.title;
 		var tempob = {'user' : req.cookies.username, 'title' : rtitle};
-		for (var v = 1; v < Object.keys(req.body).length - 1; v++)
-		{
-			
-			var tempagain = "name" + v.toString();
-			var tempstring = req.body[tempagain];
-			tempob[tempstring] = 0;
-		}
 		polls.insert(tempob, function (err) {
                if (err) {
                   throw err;
                }
-               var urlgo = "/poll/" + req.cookies.username.toString() + "/" + rtitle;
+               var urlgo = "/";
                res.redirect(urlgo);
             });
 	}
@@ -138,18 +127,21 @@ function clickHandler (db) {
 	
 	this.displayPoll = function (req, res, next) {
 		var clickProjection = { '_id': false };
-		var rname = decodeURI(req.params.name).toString();
-		var rtitle = decodeURI(req.params.ptitle).toString();
-		if (req.params.ptitle.endsWith('?') && !rtitle.endsWith('?')) {
-			rtitle += "?";
-		}
-		polls.findOne({'user': rname, 'title' : rtitle}, clickProjection, function (err, result) {
+		var rname = req.params.name;
+		polls.find({'user': rname}, clickProjection, function (err, result) {
          if (err) {
             throw err;
          }
          if (result) {
-            res.json(result);
+         	result.toArray(function (err, result) {
+         		if (err) {
+            		throw err;
+         		}
+         		res.json(result);
+         	})
+            
          } else {
+            
          }
       });
 	}
@@ -174,12 +166,9 @@ function clickHandler (db) {
 	}
 	
 	this.deletePoll = function (req, res, next) {
-		var rname = decodeURI(req.params.name).toString();
-		var rtitle = decodeURI(req.params.ptitle).toString();
-		if (req.params.ptitle.endsWith('?') && !rtitle.endsWith('?')) {
-			rtitle += "?";
-		}
-		polls.remove({'user': rname, 'title' : rtitle}, function (err, result) {
+	   console.log(req.body.foo);
+		var rtitle = req.body.foo;
+		polls.remove({'user': req.cookies.username, 'title' : rtitle}, function (err, result) {
 			if (err) {
             throw err;
          }
